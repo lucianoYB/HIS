@@ -1,0 +1,21 @@
+extends ../layouts/main
+
+block content
+  .row.justify-content-center
+    .col-md-6
+      .card
+        .card-header
+          h4.text-center Iniciar Sesión
+        .card-body
+          if error
+            .alert.alert-danger= error
+          
+          form(method="POST", action="/auth/login")
+            .mb-3
+              label.form-label(for="username") Usuario
+              input.form-control(type="text", name="username", required)
+            .mb-3
+              label.form-label(for="password") Contraseña
+              input.form-control(type="password", name="password", required)
+            button.btn.btn-primary.w-100(type="submit") Ingresar
+            
