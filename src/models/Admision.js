@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const Admisiones = sequelize.define('Admisiones', {
+const Admision = sequelize.define('Admision', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,19 +15,27 @@ const Admisiones = sequelize.define('Admisiones', {
       key: 'id'
     }
   },
+  doctor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Usuarios',
+      key: 'id'
+    }
+  },
   fecha_admision: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW
   },
   tipo: {
-    type: DataTypes.ENUM('programmed', 'emergency', 'referral'),
+    type: DataTypes.ENUM('programado', 'emergencia', 'derivado'),
     allowNull: false
   },
   estado: {
-    type: DataTypes.ENUM('active', 'discharged', 'cancelled'),
+    type: DataTypes.ENUM('activo', 'cancelado', 'dado de alta'),
     allowNull: false,
-    defaultValue: 'active'
+    defaultValue: 'activo'
   },
   motivo: {
     type: DataTypes.TEXT,
@@ -38,4 +46,4 @@ const Admisiones = sequelize.define('Admisiones', {
   underscored: true
 });
 
-module.exports = Admisiones;
+module.exports = Admision;
