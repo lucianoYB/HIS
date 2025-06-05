@@ -3,15 +3,17 @@ const sequelize = require('../config/db');
 
 const AsignacionCama = sequelize.define('AsignacionCama', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  admision_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: 'Admisions', key: 'id' }
-  },
   cama_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: { model: 'Camas', key: 'id' }
+    references: { model: 'camas', key: 'id' }, // minúsculas y plural
+    onDelete: 'CASCADE'
+  },
+  admision_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: 'admisiones', key: 'id' }, // minúsculas y plural
+    onDelete: 'CASCADE'
   },
   fecha_asignacion: {
     type: DataTypes.DATE,
@@ -23,6 +25,7 @@ const AsignacionCama = sequelize.define('AsignacionCama', {
     allowNull: true
   }
 }, {
+  tableName: 'asignacion_camas', // minúsculas y plural
   timestamps: true,
   underscored: true
 });

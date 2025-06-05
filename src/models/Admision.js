@@ -11,7 +11,7 @@ const Admision = sequelize.define('Admision', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Pacientes', // nombre de la tabla asociada
+      model: 'pacientes', // minúsculas y plural
       key: 'id'
     }
   },
@@ -19,7 +19,7 @@ const Admision = sequelize.define('Admision', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Usuarios',
+      model: 'usuarios', // minúsculas y plural
       key: 'id'
     }
   },

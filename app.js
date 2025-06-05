@@ -23,8 +23,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 const authRoutes = require('./src/routes/authRoutes');
+const pacienteRoutes = require('./src/routes/pacienteRoutes');
+const admisionRoutes = require('./src/routes/admisionRoutes');
+
+
+const authMiddleware = require('./src/middlewares/auth');
+
+
 app.use('/auth', authRoutes);
+app.use('/pacientes', authMiddleware, pacienteRoutes);
+app.use('/admisiones', authMiddleware, admisionRoutes);
 
 
 app.get('/', (req, res) => {

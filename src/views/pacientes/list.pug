@@ -1,0 +1,30 @@
+extends ../layouts/main
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1 Lista de Pacientes
+    a.btn.btn-primary(href="/pacientes/create") Nuevo Paciente
+
+  if success
+    .alert.alert-success= success
+
+  table.table.table-striped
+    thead
+      tr
+        th DNI
+        th Nombre
+        th Apellido
+        th Sexo
+        th Teléfono
+        th Acciones
+    tbody
+      each paciente in pacientes
+        tr
+          td= paciente.dni
+          td= paciente.nombre
+          td= paciente.apellido
+          td= paciente.sexo === 'M' ? 'Masculino' : paciente.sexo === 'F' ? 'Femenino' : 'Otro'
+          td= paciente.telefono
+          td
+            a.btn.btn-sm.btn-info(href=`/pacientes/${paciente.id}`) Ver
+            a.btn.btn-sm.btn-warning.mx-2(href=`/pacientes/${paciente.id}/edit`) Editar

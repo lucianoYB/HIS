@@ -20,6 +20,7 @@ const Ala = sequelize.define('Ala', {
     allowNull: true
   }
 }, {
+  tableName: 'alas', // fuerza el nombre plural si es necesario
   timestamps: true,
   underscored: true
 });

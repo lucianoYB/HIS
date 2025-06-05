@@ -6,7 +6,8 @@ const Cama = sequelize.define('Cama', {
   habitacion_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: { model: 'Habitaciones', key: 'id' }
+    references: { model: 'habitaciones', key: 'id' }, // minúsculas y plural
+    onDelete: 'CASCADE'
   },
   numero: { type: DataTypes.STRING, allowNull: false },
   estado: {
@@ -15,6 +16,7 @@ const Cama = sequelize.define('Cama', {
     defaultValue: 'libre'
   }
 }, {
+  tableName: 'camas', // minúsculas y plural
   timestamps: true,
   underscored: true
 });

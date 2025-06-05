@@ -1,0 +1,40 @@
+extends ../layouts/main
+
+block content
+  h1.mb-4= title
+
+  .card
+    .card-header
+      h5.card-title Información del Paciente
+    .card-body
+      p Nombre: #{admission.Paciente.nombre} #{admission.Paciente.apellido}
+      p DNI: #{admission.Paciente.dni}
+      p Sexo: #{admission.Paciente.sexo === 'M' ? 'Masculino' : admission.Paciente.sexo === 'F' ? 'Femenino' : 'Otro'}
+      p Motivo de admisión: #{admission.motivo}
+
+  .card.mt-4
+    .card-header
+      h5.card-title Seleccionar Cama
+    .card-body
+      form(method="POST", action=`/admisiones/${admission.id}/asignar-cama`)
+        .mb-3
+          label.form-label(for="ala") Ala/Habitación
+          select.form-select(name="ala", onchange="this.form.submit()")
+            option(value="") Todas
+            each ala in alas
+              option(value=ala.id, selected=ala.id == selectedAla)= ala.nombre
+
+        if camas.length > 0
+          .mb-3
+            label.form-label(for="cama_id") Camas Disponibles
+            select.form-select(name="cama_id", required)
+              each cama in camas
+                option(value=cama.id)= `Cama ${cama.numero} - Habitación ${cama.Habitacion.numero} (${cama.Habitacion.Ala.nombre})`
+          
+          .mb-3
+            label.form-label(for="notas") Notas
+            textarea.form-control(name="notas", rows="3")
+          
+          button.btn.btn-primary(type="submit") Asignar Cama
+        else
+          .alert.alert-warning No hay camas disponibles en esta área
