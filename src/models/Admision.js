@@ -42,6 +42,7 @@ const Admision = sequelize.define('Admision', {
     allowNull: false
   }
 }, {
+  tableName: 'admisiones', // fuerza el nombre plural si es necesario
   timestamps: true,
   underscored: true
 });

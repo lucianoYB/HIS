@@ -43,6 +43,7 @@ const Paciente = sequelize.define('Paciente', {
     }
   }
 }, {
+  tableName: 'pacientes', // minúsculas y plural
   timestamps: true,
   underscored: true
 });

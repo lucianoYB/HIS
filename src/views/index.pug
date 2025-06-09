@@ -1,0 +1,31 @@
+extends layouts/main
+
+block content
+  .jumbotron.bg-light.p-5.mb-4
+    h1.display-4 Bienvenido al Sistema Hospitalario
+    p.lead Sistema integral de gestión hospitalaria
+    hr.my-4
+    if user
+      p Estás conectado como #{user.username} (#{user.role})
+    else
+      a.btn.btn-primary.btn-lg(href="/auth/login") Iniciar Sesión
+
+  .row
+    .col-md-4.mb-4
+      .card
+        .card-body
+          h5.card-title Gestión de Pacientes
+          p.card-text Administra el registro de pacientes y sus historiales médicos.
+          a.btn.btn-outline-primary(href="/pacientes") Acceder
+    .col-md-4.mb-4
+      .card
+        .card-body
+          h5.card-title Admisiones
+          p.card-text Gestiona las admisiones de pacientes y asignación de camas.
+          a.btn.btn-outline-primary(href="/admisiones") Acceder
+    .col-md-4.mb-4
+      .card
+        .card-body
+          h5.card-title Reportes
+          p.card-text Genera reportes de ocupación y actividad hospitalaria.
+          a.btn.btn-outline-primary(href="/reports") Acceder

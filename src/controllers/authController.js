@@ -9,13 +9,15 @@ const authController = {
     try {
       const { username, password } = req.body;
       const token = await authenticate(username, password);
-      
       res.cookie('token', token, { httpOnly: true });
-      res.redirect('/dashboard');
+      res.flash('success', 'Inicio de sesión exitoso');
+      res.redirect('/'); // O la ruta que prefieras
     } catch (error) {
       res.render('auth/login', { 
         title: 'Iniciar Sesión',
-        error: error.message
+        error: error.message,
+    username: req.body.username
+
       });
     }
   },

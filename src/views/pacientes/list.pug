@@ -16,6 +16,7 @@ block content
         th Apellido
         th Sexo
         th Teléfono
+        th Correo Electrónico
         th Acciones
     tbody
       each paciente in pacientes
@@ -23,8 +24,9 @@ block content
           td= paciente.dni
           td= paciente.nombre
           td= paciente.apellido
-          td= paciente.sexo === 'M' ? 'Masculino' : paciente.sexo === 'F' ? 'Femenino' : 'Otro'
+          td= paciente.sexo === 'M' ? 'Masculino' : paciente.sexo === 'F' ? 'Femenino' 
           td= paciente.telefono
+          td= paciente.email
           td
             a.btn.btn-sm.btn-info(href=`/pacientes/${paciente.id}`) Ver
             a.btn.btn-sm.btn-warning.mx-2(href=`/pacientes/${paciente.id}/edit`) Editar

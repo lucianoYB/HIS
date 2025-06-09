@@ -19,9 +19,9 @@ app.use(
 );
 
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname,'src', 'views'));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname,'src', 'public')));
 
 
 const authRoutes = require('./src/routes/authRoutes');
@@ -41,9 +41,31 @@ app.get('/', (req, res) => {
   res.render('index', { title: 'Sistema Hospitalario' });
 });
 
+// Middleware para pasar el usuario en las respuestas
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+// Manejo de errores 404
+app.use((req, res, next) => {
+  res.status(404).render('error', { 
+    error: 'Página no encontrada',
+    title: 'Error 404 - Página no encontrada'
+  });
+});
+
+// Manejo de errores generales
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('error', { error: err });
+  const statusCode = err.statusCode || 500;
+  const errorMessage = process.env.NODE_ENV === 'development' 
+    ? err.message 
+    : 'Ha ocurrido un error en el servidor';
+  res.status(statusCode).render('error', {
+    title: `Error ${statusCode}`,
+    error: errorMessage
+  });
 });
 
 const PORT = process.env.PORT || 3000;

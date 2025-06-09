@@ -1,0 +1,50 @@
+extends ../layouts/main
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1 Admisiones Activas
+    a.btn.btn-primary(href="/admisiones/create") Nueva Admisión
+
+  if success
+    .alert.alert-success= success
+
+  table.table.table-striped
+    thead
+      tr
+        th ID
+        th Paciente
+        th Tipo
+        th Fecha
+        th Cama
+        th Acciones
+    tbody
+      each admision in admisiones
+        tr
+          td= admision.id
+          td= `${admision.Paciente.nombre} ${admision.Paciente.apellido}`
+          td= admision.tipo === 'programado' ? 'Programada' : admision.tipo === 'emergencia' ? 'Emergencia' : 'Derivación'
+          td= new Date(admision.fecha_admision).toLocaleDateString()
+          td
+            if admision.AsignacionCama
+              | Cama #{admision.AsignacionCama.Cama.numero}
+            else
+              | Sin asignar
+          td
+            a.btn.btn-sm.btn-info(href=`/admisiones/${admision.id}`) Ver
+            if !admision.AsignacionCama
+              a.btn.btn-sm.btn-warning.mx-2(href=`/admisiones/${admision.id}/asignar-cama`) Asignar Cama
+            button.btn.btn-sm.btn-danger(
+              onclick=`confirmarCancelar(${admision.id})`
+            ) Cancelar
+
+  script.
+    function confirmarCancelar(admisionId) {
+      if (confirm('¿Está seguro que desea cancelar esta admisión?')) {
+        fetch(`/admisiones/${admisionId}/cancelar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }).then(response => {
+          if (response.ok) window.location.reload();
+        });
+      }
+    }

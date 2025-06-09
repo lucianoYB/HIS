@@ -1,0 +1,13 @@
+extends layouts/main
+
+block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-8
+        .card.border-danger
+          .card-header.bg-danger.text-white
+            h4.card-title Error
+          .card-body
+            p.card-text Ha ocurrido un error en la aplicación:
+            .alert.alert-danger= error
+            a.btn.btn-primary(href="/") Volver al inicio

@@ -1,6 +1,6 @@
 const { Admision, Paciente, Cama, AsignacionCama, Ala, Habitacion, Usuario } = require('../models');
 
-const adimisionController = {
+const admisionController = {
   list: async (req, res) => {
     try {
       const admisiones = await Admision.findAll({
@@ -188,4 +188,4 @@ const adimisionController = {
   }
 };
 
-module.exports = adimisionController;
+module.exports = admisionController;
