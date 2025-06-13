@@ -7,14 +7,16 @@ block content
         .card-header
           h4.text-center Iniciar Sesión
         .card-body
+          if success
+            .alert.alert-success= success
           if error
             .alert.alert-danger= error
           
           form(method="POST", action="/auth/login")
             .mb-3
               label.form-label(for="username") Usuario
-              input.form-control(type="text", name="username", id="username", required)
+              input.form-control(type="text", name="username", id="username", required, autocomplete="username")
             .mb-3
               label.form-label(for="password") Contraseña
-              input.form-control(type="password", name="password", id="password", required)
+              input.form-control(type="password", name="password", id="password", required, autocomplete="current-password")
             button.btn.btn-primary.w-100(type="submit") Ingresar

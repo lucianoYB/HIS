@@ -6,6 +6,7 @@ const {
   Habitacion,
   Cama,
 } = require("../models");
+const bcrypt = require("bcryptjs");
 
 (async () => {
   try {
@@ -15,36 +16,38 @@ const {
     await sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
     console.log("Base de datos sincronizada");
 
-    await Usuario.bulkCreate([
+    const usuarios = [
       {
         username: "admin",
-        password: "admin123",
+        password: await bcrypt.hash("admin123", 10),
         role: "admin",
         full_name: "Administrador Principal",
         email: "admin@hospital.com",
       },
       {
         username: "doctor1",
-        password: "doctor123",
+        password: await bcrypt.hash("doctor123", 10),
         role: "doctor",
         full_name: "Dr. Juan Pérez",
         email: "doctor1@hospital.com",
       },
       {
         username: "enfermero1",
-        password: "enfermero123",
+        password: await bcrypt.hash("enfermero123", 10),
         role: "enfermero",
         full_name: "Enf. Marío García",
         email: "enfermero1@hospital.com",
       },
       {
         username: "recepcion1",
-        password: "recepcion123",
+        password: await bcrypt.hash("recepcion123", 10),
         role: "recepcionista",
         full_name: "Recepcionista Ana López",
         email: "reception1@hospital.com",
       },
-    ]);
+    ];
+
+    await Usuario.bulkCreate(usuarios);
 
     await Paciente.bulkCreate([
       {

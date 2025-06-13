@@ -1,0 +1,17 @@
+extends ../layouts/main
+
+block content
+  h1 Nuevo Paciente
+
+  form(method="POST", action="/pacientes/create")
+    .mb-3
+      label.form-label(for="dni") DNI
+      input.form-control(type="text", name="dni", id="dni", required)
+    .mb-3
+      label.form-label(for="nombre") Nombre
+      input.form-control(type="text", name="nombre", id="nombre", required)
+    .mb-3
+      label.form-label(for="apellido") Apellido
+      input.form-control(type="text", name="apellido", id="apellido", required)
+    // Agrega más campos según tu modelo...
+    button.btn.btn-primary(type="submit") Guardar

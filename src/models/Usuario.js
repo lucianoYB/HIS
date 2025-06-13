@@ -33,13 +33,17 @@ const Usuario = sequelize.define('Usuario', {
       isEmail: true
     }
   }
-}, {
-  hooks: {
-    beforeSave: async (user) => {
-      if (user.changed('password')) {
-        user.password = await bcrypt.hash(user.password, 10);
-      }
-    }
+});
+
+// Hook para hashear antes de crear
+Usuario.beforeCreate(async (user) => {
+  user.password = await bcrypt.hash(user.password, 10);
+});
+
+// Hook para hashear antes de actualizar (solo si cambió la contraseña)
+Usuario.beforeUpdate(async (user) => {
+  if (user.changed('password')) {
+    user.password = await bcrypt.hash(user.password, 10);
   }
 });
 

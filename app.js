@@ -3,6 +3,7 @@ const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const flash = require('connect-flash');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(
     cookie: { secure: false },
   })
 );
+app.use(flash());
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname,'src', 'views'));
@@ -44,6 +46,13 @@ app.get('/', (req, res) => {
 // Middleware para pasar el usuario en las respuestas
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  next();
+});
+
+// Middleware para pasar los mensajes flash a las vistas
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 });
 

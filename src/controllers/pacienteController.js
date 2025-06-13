@@ -36,10 +36,18 @@ const pacienteController = {
     }
   },
 
-  createForm: (req, res) => {
-    res.render('pacientes/create', { 
-      title: 'Registrar Nuevo Paciente' 
-    });
+  createForm: async (req, res) => {
+    try {
+      const pacientes = await Paciente.findAll();
+      res.render('pacientes/create', { 
+        title: 'Registrar Nuevo Paciente',
+        pacientes: pacientes
+      });
+    } catch (error) {
+      res.render('error', { 
+        error: 'Error al cargar el formulario de registro' 
+      });
+    }
   },
 
   create: async (req, res) => {
@@ -93,6 +101,21 @@ const pacienteController = {
         error: 'Error al actualizar el paciente',
         paciente: req.body
       });
+    }
+  },
+
+  findPaciente: async (req, res) => {
+    try {
+      const paciente = await Paciente.findByPk(req.body.paciente_id);
+      if (!paciente) {
+        req.flash('error', 'Paciente no encontrado');
+        return res.redirect('/admisiones/create');
+      }
+      req.flash('success', 'Paciente encontrado');
+      res.redirect(`/pacientes/${paciente.id}`);
+    } catch (error) {
+      req.flash('error', 'Error al buscar el paciente');
+      res.redirect('/admisiones/create');
     }
   }
 };

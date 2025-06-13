@@ -1,0 +1,17 @@
+extends ../layouts/main
+
+block content
+  h1 Detalle del Paciente
+
+  if paciente
+    ul
+      li g DNI: #{paciente.dni}
+      li  Nombre: #{paciente.nombre}
+      li  Apellido: #{paciente.apellido}
+      li  Fecha de nacimiento: #{paciente.fecha_nacimiento}
+      li  Sexo: #{paciente.sexo}
+      li  Dirección: #{paciente.direccion}
+      li  Teléfono: #{paciente.telefono}
+      li Email: #{paciente.email}
+  else
+    .alert.alert-danger Paciente no encontrado.

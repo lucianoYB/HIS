@@ -1,0 +1,47 @@
+/* Estilos generales */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Navbar personalizada */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Tarjetas de admisión */
+.admission-card {
+  transition: transform 0.3s;
+}
+.admission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Formularios */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* Botones */
+.btn-hospital {
+  background-color: #1a7bb9;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+}
+.btn-hospital:hover {
+  background-color: #156292;
+  color: white;
+}
+
+/* Tablas */
+.table-hover tbody tr:hover {
+  background-color: rgba(26, 123, 185, 0.1);
+}

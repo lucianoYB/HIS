@@ -1,0 +1,17 @@
+extends ../layouts/main
+
+block content
+  h1 Nueva Admisión
+
+  form(method="POST", action="/admisiones/create")
+    .mb-3
+      label.form-label(for="paciente_id") Paciente
+      select.form-control(name="paciente_id", id="paciente_id", required)
+        option(value="") Seleccione un paciente
+        each paciente in pacientes
+          option(value=paciente.id)= `${paciente.nombre} ${paciente.apellido} (${paciente.dni})`
+    .mb-3
+      label.form-label(for="motivo") Motivo de admisión
+      input.form-control(type="text", name="motivo", id="motivo", required)
+    // Agrega más campos según tu modelo...
+    button.btn.btn-primary(type="submit") Guardar
