@@ -24,6 +24,8 @@ router.post('/:id/asignar-cama', admisionController.asignarCama);
 router.post('/:id/cancelar', admisionController.cancelar);
 
 
+router.post('/:id/alta', admisionController.darDeAlta);
+
 
 module.exports = router;
 

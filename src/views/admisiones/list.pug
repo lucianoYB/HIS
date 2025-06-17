@@ -33,9 +33,12 @@ block content
             a.btn.btn-sm.btn-info(href=`/admisiones/${admision.id}`) Ver
             if !admision.AsignacionCama
               a.btn.btn-sm.btn-warning.mx-2(href=`/admisiones/${admision.id}/asignar-cama`) Asignar Cama
-            button.btn.btn-sm.btn-danger(
-              onclick=`confirmarCancelar(${admision.id})`
-            ) Cancelar
+            div.d-flex.gap-2.mt-4
+              form(method="POST", action=`/admisiones/${admision.id}/alta`)
+                button.btn.btn-success(type="submit") Dar de alta
+              form(method="POST", action=`/admisiones/${admision.id}/cancelar`)
+                button.btn.btn-danger(type="submit") Cancelar admisión
+              
 
   script.
     function confirmarCancelar(admisionId) {

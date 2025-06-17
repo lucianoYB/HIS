@@ -33,6 +33,9 @@ block content
       .mb-3
         label.form-label(for="email") Email
         input.form-control(type="email", name="email", id="email", required, value=paciente.email)
+      .mb-3
+        label.form-label(for="mutual") Mutual
+        input.form-control(type="text", name="mutual", id="mutual", value=paciente ? paciente.mutual : '')
       button.btn.btn-primary(type="submit") Guardar Cambios
   else
     .alert.alert-danger Paciente no encontrado.

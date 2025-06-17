@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
     req.flash('success', 'Paciente creado correctamente');
     res.redirect('/pacientes');
   } catch (error) {
-    console.error(error); // <-- Esto es importante para ver el error real
+    console.error(error); 
     req.flash('error', 'Error al crear paciente');
     res.redirect('/pacientes/create');
   }

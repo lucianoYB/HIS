@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Funciones para admisiones
 function cancelAdmission(admissionId) {
   if (confirmAction('Cancelar esta admisión liberará la cama asignada. ¿Desea continuar?')) {
-    fetch(`/admisiones/${admissionId}/cancelar`, { // Corregido a español
+    fetch(`/admisiones/${admissionId}/cancelar`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-        // Puedes agregar CSRF si tu backend lo requiere
+        
       }
     }).then(response => {
       if (response.ok) window.location.reload();

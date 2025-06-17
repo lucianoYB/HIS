@@ -41,9 +41,13 @@ const Paciente = sequelize.define('Paciente', {
     validate: {
       isEmail: true
     }
+  },
+  mutual: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
-  tableName: 'pacientes', // minúsculas y plural
+  tableName: 'pacientes', 
   timestamps: true,
   underscored: true
 });

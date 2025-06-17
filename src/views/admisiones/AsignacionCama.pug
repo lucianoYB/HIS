@@ -3,17 +3,27 @@ extends ../layouts/main
 block content
   h1= title
 
-  form(method="POST", action=`/admisiones/${admision.id}/asignar-cama`)
+  //- Formulario para seleccionar ala (GET)
+  form(method="GET", action=`/admisiones/${admision.id}/asignar-cama`)
     .mb-3
-      label.form-label(for="ala_id") Seleccione un ala
-      select.form-control(name="ala_id", id="ala_id", required)
+      label(for="ala") Seleccione un ala
+      select.form-control(name="ala", id="ala", required, onchange="this.form.submit()")
         option(value="") Seleccione un ala
         each ala in alas
-          option(value=ala.id)= ala.nombre
-    .mb-3
-      label.form-label(for="cama_id") Seleccione una cama
-      select.form-control(name="cama_id", id="cama_id", required)
-        option(value="") Seleccione una cama
-        each cama in camas
-          option(value=cama.id selected=(camaSeleccionada && camaSeleccionada.id == cama.id)) Cama #{cama.numero} - Habitación #{cama.Habitacion.numero}
-    button.btn.btn-primary(type="submit") Asignar
+          option(value=ala.id selected=(ala.id == alaSeleccionada)) #{ala.nombre}
+
+  //- Formulario para asignar cama (POST)
+  if camas && camas.length
+    form(method="POST", action=`/admisiones/${admision.id}/asignar-cama`)
+      input(type="hidden", name="ala_id", value=alaSeleccionada)
+      .mb-3
+        label(for="cama_id") Seleccione una cama
+        select.form-control(name="cama_id", id="cama_id", required)
+          option(value="") Seleccione una cama
+          each cama in camas
+            option(value=cama.id) Cama #{cama.numero} - Habitación #{cama.Habitacion.numero}
+      button.btn.btn-primary(type="submit") Asignar
+  else if alaSeleccionada
+    p.text-danger No hay camas libres en esta ala.
+  else
+    p Seleccione un ala para ver las camas disponibles.

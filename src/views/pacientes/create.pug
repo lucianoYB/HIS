@@ -22,7 +22,7 @@ block content
         option(value="") Seleccione
         option(value="M") Masculino
         option(value="F") Femenino
-        option(value="O") Otro
+        
     .mb-3
       label.form-label(for="direccion") Dirección
       input.form-control(type="text", name="direccion", id="direccion", required)
@@ -32,4 +32,7 @@ block content
     .mb-3
       label.form-label(for="email") Email
       input.form-control(type="email", name="email", id="email", required)
+    .mb-3
+      label.form-label(for="mutual") Mutual
+      input.form-control(type="text", name="mutual", id="mutual", value=paciente ? paciente.mutual : '')
     button.btn.btn-primary(type="submit") Guardar

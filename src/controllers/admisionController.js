@@ -49,71 +49,40 @@ const admisionController = {
         estado: 'activo',
         doctor_id: req.user.id
       });
-      req.flash('success', 'Admisión creada exitosamente');
+      // Redirige pasando el ala seleccionada
       res.redirect(`/admisiones/${admision.id}/asignar-cama?ala=${ala_id}`);
     } catch (error) {
-      res.render('error', { 
-        error: 'Error al crear la admisión' 
-      });
+      res.render('error', { error: 'Error al crear la admisión' });
     }
   },
 
   asignarCamaForm: async (req, res) => {
     try {
       const { ala } = req.query;
-      const admision = await Admision.findByPk(req.params.id, {
-        include: [Paciente]
-      });
-      if (!admision) {
-        req.flash('error', 'Admisión no encontrada');
-        return res.redirect('/admisiones');
-      }
-      const camasDisponibles = await Cama.findAll({
-        include: [
-          {
-            model: Habitacion,
-            where: ala ? { ala_id: ala } : {},
-            include: [Ala]
-          }
-        ],
-        where: { estado: 'libre' }
-      });
-      const paciente = await Paciente.findByPk(admision.paciente_id);
-      // Filtro de camas según restricción de sexo
-      const camasFiltradas = [];
-      for (const cama of camasDisponibles) {
-        if (cama.Habitacion.cantidad_camas === 1) {
-          camasFiltradas.push(cama);
-          continue;
-        }
-        const asignacion = await AsignacionCama.findOne({
-          where: { cama_id: cama.id },
+      const admision = await Admision.findByPk(req.params.id, { include: [Paciente] });
+      const alas = await Ala.findAll();
+      let camas = [];
+
+      if (ala) {
+        camas = await Cama.findAll({
+          where: { estado: 'libre' },
           include: [{
-            model: Admision,
-            where: { estado: 'activo' },
-            include: [Paciente]
+            model: Habitacion,
+            where: { ala_id: ala },
+            include: [Ala]
           }]
         });
-        if (!asignacion || asignacion.Admision.Paciente.sexo === paciente.sexo) {
-          camasFiltradas.push(cama);
-        }
       }
-      const alas = await Ala.findAll();
-      let cama = null;
-      if (req.query.cama) {
-        cama = await Cama.findByPk(req.query.cama);
-      }
-      res.render('admisiones/AsignacionCama', { 
-        title: `Asignar Cama a ${admision.Paciente.nombre} ${admision.Paciente.apellido}`,
+
+      res.render('admisiones/AsignacionCama', {
+        title: 'Asignar Cama',
         admision,
-        camas: camasFiltradas,
         alas,
-        camaSeleccionada: cama
+        camas,
+        alaSeleccionada: ala
       });
     } catch (error) {
-      console.error(error); // <-- Esto mostrará el error real
-      req.flash('error', 'Error al obtener los datos de la admisión');
-      res.redirect('/admisiones');
+      res.render('error', { error: 'Error al cargar asignación de cama' });
     }
   },
 
@@ -196,6 +165,23 @@ const admisionController = {
     } catch (error) {
       console.error(error);
       res.render('error', { error: 'Error al cancelar la admisión' });
+    }
+  },
+
+  darDeAlta: async (req, res) => {
+    try {
+      const admision = await Admision.findByPk(req.params.id);
+      if (!admision) {
+        req.flash('error', 'Admisión no encontrada');
+        return res.redirect('/admisiones');
+      }
+      await admision.update({ estado: 'dado de alta' });
+      req.flash('success', 'Paciente dado de alta correctamente');
+      res.redirect('/admisiones');
+    } catch (error) {
+      console.error(error);
+      req.flash('error', 'Error al dar de alta la admisión');
+      res.redirect('/admisiones');
     }
   }
 };
