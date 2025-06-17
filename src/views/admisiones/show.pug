@@ -1,0 +1,16 @@
+extends ../layouts/main
+
+block content
+  h1 Detalle de la Admisión
+
+  if admision
+    ul
+      li  Paciente: #{admision.paciente_id}
+      li  Fecha de admision: #{admision.fecha_admision}
+      li  Tipo: #{admision.tipo}
+      li  Estado: #{admision.estado}
+      
+    form(method="POST", action=`/admisiones/${admision.id}/cancelar`)
+      button.btn.btn-danger(type="submit") Cancelar admisión
+  else
+    .alert.alert-danger Admisión no encontrada.

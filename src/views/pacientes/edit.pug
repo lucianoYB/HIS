@@ -14,7 +14,25 @@ block content
       .mb-3
         label.form-label(for="apellido") Apellido
         input.form-control(type="text", name="apellido", id="apellido", required, value=paciente.apellido)
-      // Agrega más campos según tu modelo...
+      .mb-3
+        label.form-label(for="fecha_nacimiento") Fecha de nacimiento
+        input.form-control(type="date", name="fecha_nacimiento", id="fecha_nacimiento", required, value=paciente.fecha_nacimiento)
+      .mb-3
+        label.form-label(for="sexo") Sexo
+        select.form-control(name="sexo", id="sexo", required)
+          option(value="") Seleccione
+          option(value="M", selected=paciente.sexo === 'M') Masculino
+          option(value="F", selected=paciente.sexo === 'F') Femenino
+          option(value="O", selected=paciente.sexo === 'O') Otro
+      .mb-3
+        label.form-label(for="direccion") Dirección
+        input.form-control(type="text", name="direccion", id="direccion", required, value=paciente.direccion)
+      .mb-3
+        label.form-label(for="telefono") Teléfono
+        input.form-control(type="text", name="telefono", id="telefono", required, value=paciente.telefono)
+      .mb-3
+        label.form-label(for="email") Email
+        input.form-control(type="email", name="email", id="email", required, value=paciente.email)
       button.btn.btn-primary(type="submit") Guardar Cambios
   else
     .alert.alert-danger Paciente no encontrado.

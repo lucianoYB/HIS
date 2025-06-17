@@ -11,7 +11,23 @@ block content
         each paciente in pacientes
           option(value=paciente.id)= `${paciente.nombre} ${paciente.apellido} (${paciente.dni})`
     .mb-3
+      label.form-label(for="fecha_admision") Fecha de admisión
+      input.form-control(type="date", name="fecha_admision", id="fecha_admision", required)
+    .mb-3
+      label.form-label(for="tipo") Tipo de admisión
+      select.form-control(name="tipo", id="tipo", required)
+        option(value="") Seleccione
+        option(value="programado") Programado
+        option(value="emergencia") Emergencia
+        option(value="derivado") Derivado
+    .mb-3
+      label.form-label(for="estado") Estado
+      select.form-control(name="estado", id="estado", required)
+        option(value="") Seleccione
+        option(value="activo") Activo
+        option(value="cancelado") Cancelado
+        option(value="dado de alta") Dado de alta
+    .mb-3
       label.form-label(for="motivo") Motivo de admisión
       input.form-control(type="text", name="motivo", id="motivo", required)
-    // Agrega más campos según tu modelo...
     button.btn.btn-primary(type="submit") Guardar

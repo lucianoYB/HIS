@@ -1,14 +1,40 @@
 const express = require('express');
 const router = express.Router();
 const admisionController = require('../controllers/admisionController');
-const authMiddleware = require('../middlewares/auth');
 
-router.get('/', authMiddleware, admisionController.list);
-router.get('/create', authMiddleware, admisionController.createForm);
-router.post('/', authMiddleware, admisionController.create);
-router.get('/:id/asignar-cama', authMiddleware, admisionController.asignarCamaForm);
-router.post('/:id/asignar-cama', authMiddleware, admisionController.asignarCama);
-router.get('/:id', authMiddleware, admisionController.show);
-router.post('/:id/cancelar', authMiddleware, admisionController.cancelar);
+
+router.get('/create', admisionController.createForm);
+
+
+router.post('/create', admisionController.create);
+
+
+router.get('/', admisionController.list);
+
+
+router.get('/:id', admisionController.show);
+
+
+router.get('/:id/asignar-cama', admisionController.asignarCamaForm);
+
+
+router.post('/:id/asignar-cama', admisionController.asignarCama);
+
+
+router.post('/:id/cancelar', admisionController.cancelar);
+
+
 
 module.exports = router;
+
+
+exports.create = async (req, res) => {
+  try {
+   
+    req.flash('success', 'Admisión creada correctamente');
+    res.redirect('/admisiones');
+  } catch (error) {
+    req.flash('error', 'Error al crear admisión');
+    res.redirect('/admisiones/create');
+  }
+};

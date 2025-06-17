@@ -15,14 +15,14 @@ const Admision = sequelize.define('Admision', {
       key: 'id'
     }
   },
-  doctor_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'usuarios', // minúsculas y plural
-      key: 'id'
-    }
-  },
+  //doctor_id: {
+    //type: DataTypes.INTEGER,
+    //allowNull: false,
+    //references: {
+      //model: 'usuarios', // minúsculas y plural
+      //key: 'id'
+    //},
+    //onDelete: 'SET NULL' // o 'CASCADE' según tu lógica
   fecha_admision: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -46,5 +46,10 @@ const Admision = sequelize.define('Admision', {
   timestamps: true,
   underscored: true
 });
+
+Admision.associate = (models) => {
+  Admision.hasOne(models.AsignacionCama, { foreignKey: 'admision_id' });
+  models.AsignacionCama.belongsTo(Admision, { foreignKey: 'admision_id' });
+};
 
 module.exports = Admision;

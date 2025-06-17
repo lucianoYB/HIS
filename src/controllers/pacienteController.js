@@ -1,123 +1,62 @@
-const { Paciente } = require('../models');
+const Paciente = require('../models/Paciente');
 
-const pacienteController = {
-  list: async (req, res) => {
-    try {
-      const pacientes = await Paciente.findAll({
-        order: [['apellido', 'ASC']]
-      });
-      res.render('pacientes/list', { 
-        title: 'Lista de Pacientes',
-        pacientes: pacientes
-      });
-    } catch (error) {
-      res.render('error', { 
-        error: 'Error al obtener la lista de pacientes' 
-      });
-    }
-  },
+// Mostrar formulario de creación
+exports.createForm = (req, res) => {
+  res.render('pacientes/create');
+};
 
-  show: async (req, res) => {
-    try {
-      const paciente = await Paciente.findByPk(req.params.id);
-      if (!paciente) {
-        return res.status(404).render('error', { 
-          error: 'Paciente no encontrado' 
-        });
-      }
-      res.render('pacientes/show', { 
-        title: `Paciente: ${paciente.nombre} ${paciente.apellido}`,
-        paciente: paciente
-      });
-    } catch (error) {
-      res.render('error', { 
-        error: 'Error al obtener los datos del paciente' 
-      });
-    }
-  },
-
-  createForm: async (req, res) => {
-    try {
-      const pacientes = await Paciente.findAll();
-      res.render('pacientes/create', { 
-        title: 'Registrar Nuevo Paciente',
-        pacientes: pacientes
-      });
-    } catch (error) {
-      res.render('error', { 
-        error: 'Error al cargar el formulario de registro' 
-      });
-    }
-  },
-
-  create: async (req, res) => {
-    try {
-      const pacienteData = req.body;
-      await Paciente.create(pacienteData);
-      req.flash('success', 'Paciente registrado exitosamente');
-      res.redirect('/pacientes');
-    } catch (error) {
-      res.render('pacientes/create', { 
-        title: 'Registrar Nuevo Paciente',
-        error: 'Error al registrar el paciente',
-        paciente: req.body
-      });
-    }
-  },
-
-  editForm: async (req, res) => {
-    try {
-      const paciente = await Paciente.findByPk(req.params.id);
-      if (!paciente) {
-        return res.status(404).render('error', { 
-          error: 'Paciente no encontrado' 
-        });
-      }
-      res.render('pacientes/edit', { 
-        title: `Editar Paciente: ${paciente.nombre} ${paciente.apellido}`,
-        paciente: paciente
-      });
-    } catch (error) {
-      res.render('error', { 
-        error: 'Error al cargar el formulario de edición' 
-      });
-    }
-  },
-
-  update: async (req, res) => {
-    try {
-      const paciente = await Paciente.findByPk(req.params.id);
-      if (!paciente) {
-        return res.status(404).render('error', { 
-          error: 'Paciente no encontrado' 
-        });
-      }
-      await paciente.update(req.body);
-      req.flash('success', 'Paciente actualizado exitosamente');
-      res.redirect(`/pacientes/${paciente.id}`);
-    } catch (error) {
-      res.render('pacientes/edit', { 
-        title: `Editar Paciente: ${req.body.nombre} ${req.body.apellido}`,
-        error: 'Error al actualizar el paciente',
-        paciente: req.body
-      });
-    }
-  },
-
-  findPaciente: async (req, res) => {
-    try {
-      const paciente = await Paciente.findByPk(req.body.paciente_id);
-      if (!paciente) {
-        req.flash('error', 'Paciente no encontrado');
-        return res.redirect('/admisiones/create');
-      }
-      req.flash('success', 'Paciente encontrado');
-      res.redirect(`/pacientes/${paciente.id}`);
-    } catch (error) {
-      req.flash('error', 'Error al buscar el paciente');
-      res.redirect('/admisiones/create');
-    }
+// Guardar nuevo paciente
+exports.create = async (req, res) => {
+  try {
+    await Paciente.create(req.body);
+    req.flash('success', 'Paciente creado correctamente');
+    res.redirect('/pacientes');
+  } catch (error) {
+    console.error(error); // <-- Esto es importante para ver el error real
+    req.flash('error', 'Error al crear paciente');
+    res.redirect('/pacientes/create');
   }
 };
 
-module.exports = pacienteController;
+// Listar pacientes
+exports.list = async (req, res) => {
+  const pacientes = await Paciente.findAll();
+  res.render('pacientes/list', { pacientes });
+};
+
+// Mostrar detalle de un paciente
+exports.show = async (req, res) => {
+  const paciente = await Paciente.findByPk(req.params.id);
+  if (!paciente) {
+    req.flash('error', 'Paciente no encontrado');
+    return res.redirect('/pacientes');
+  }
+  res.render('pacientes/show', { paciente });
+};
+
+// Mostrar formulario de edición
+exports.editForm = async (req, res) => {
+  const paciente = await Paciente.findByPk(req.params.id);
+  if (!paciente) {
+    req.flash('error', 'Paciente no encontrado');
+    return res.redirect('/pacientes');
+  }
+  res.render('pacientes/edit', { paciente });
+};
+
+// Actualizar paciente
+exports.update = async (req, res) => {
+  try {
+    const paciente = await Paciente.findByPk(req.params.id);
+    if (!paciente) {
+      req.flash('error', 'Paciente no encontrado');
+      return res.redirect('/pacientes');
+    }
+    await paciente.update(req.body);
+    req.flash('success', 'Paciente actualizado correctamente');
+    res.redirect(`/pacientes/${paciente.id}`);
+  } catch (error) {
+    req.flash('error', error.errors && error.errors[0] ? error.errors[0].message : 'Error al actualizar paciente');
+    res.redirect(`/pacientes/${req.params.id}/edit`);
+  }
+};

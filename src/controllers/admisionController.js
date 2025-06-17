@@ -65,9 +65,8 @@ const admisionController = {
         include: [Paciente]
       });
       if (!admision) {
-        return res.status(404).render('error', { 
-          error: 'Admisión no encontrada' 
-        });
+        req.flash('error', 'Admisión no encontrada');
+        return res.redirect('/admisiones');
       }
       const camasDisponibles = await Cama.findAll({
         include: [
@@ -99,39 +98,56 @@ const admisionController = {
           camasFiltradas.push(cama);
         }
       }
-      res.render('admisiones/asignar-cama', { 
+      const alas = await Ala.findAll();
+      let cama = null;
+      if (req.query.cama) {
+        cama = await Cama.findByPk(req.query.cama);
+      }
+      res.render('admisiones/AsignacionCama', { 
         title: `Asignar Cama a ${admision.Paciente.nombre} ${admision.Paciente.apellido}`,
         admision,
         camas: camasFiltradas,
-        alas: await Ala.findAll()
+        alas,
+        camaSeleccionada: cama
       });
     } catch (error) {
-      res.render('error', { 
-        error: 'Error al cargar el formulario de asignación de cama' 
-      });
+      console.error(error); // <-- Esto mostrará el error real
+      req.flash('error', 'Error al obtener los datos de la admisión');
+      res.redirect('/admisiones');
     }
   },
 
   asignarCama: async (req, res) => {
     try {
-      const { cama_id, notas } = req.body;
-      const cama = await Cama.findByPk(cama_id);
-      if (!cama || cama.estado !== 'libre') {
-        req.flash('error', 'La cama seleccionada no está disponible');
+      // Verificar si ya tiene una cama asignada
+      const yaAsignada = await AsignacionCama.findOne({ where: { admision_id: req.params.id } });
+      if (yaAsignada) {
+        req.flash('error', 'Esta admisión ya tiene una cama asignada.');
+        return res.redirect(`/admisiones/${req.params.id}`);
+      }
+
+      const { ala_id, cama_id } = req.body;
+      const ala = await Ala.findByPk(ala_id);
+      if (!ala) {
+        req.flash('error', 'El ala seleccionada no existe.');
         return res.redirect(`/admisiones/${req.params.id}/asignar-cama`);
       }
+
       await AsignacionCama.create({
-        admision_id: req.params.id,
+        ala_id,
         cama_id,
-        notas
+        admision_id: req.params.id,
+        fecha_asignacion: new Date()
       });
-      await cama.update({ estado: 'ocupada' });
-      req.flash('success', 'Cama asignada exitosamente');
+
+      await Cama.update({ estado: 'ocupada' }, { where: { id: cama_id } });
+
+      req.flash('success', 'Cama asignada correctamente');
       res.redirect(`/admisiones/${req.params.id}`);
     } catch (error) {
-      res.render('error', { 
-        error: 'Error al asignar la cama' 
-      });
+      console.error(error);
+      req.flash('error', 'Error al asignar cama');
+      res.redirect(`/admisiones/${req.params.id}/asignar-cama`);
     }
   },
 
@@ -140,8 +156,7 @@ const admisionController = {
       const admision = await Admision.findByPk(req.params.id, {
         include: [
           { model: Paciente },
-          { model: AsignacionCama, include: [Cama] },
-          { model: Usuario, as: 'Doctor' }
+          { model: AsignacionCama, include: [Cama] }
         ]
       });
       if (!admision) {
@@ -166,9 +181,7 @@ const admisionController = {
         include: [AsignacionCama]
       });
       if (!admision) {
-        return res.status(404).render('error', { 
-          error: 'Admisión no encontrada' 
-        });
+        return res.status(404).render('error', { error: 'Admisión no encontrada' });
       }
       if (admision.AsignacionCama) {
         await Cama.update(
@@ -178,12 +191,11 @@ const admisionController = {
         await admision.AsignacionCama.destroy();
       }
       await admision.update({ estado: 'cancelado' });
-      req.flash('success', 'Admisión cancelada exitosamente');
+      req.flash('success', 'Admisión cancelada y cama liberada exitosamente');
       res.redirect('/admisiones');
     } catch (error) {
-      res.render('error', { 
-        error: 'Error al cancelar la admisión' 
-      });
+      console.error(error);
+      res.render('error', { error: 'Error al cancelar la admisión' });
     }
   }
 };

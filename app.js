@@ -29,6 +29,7 @@ app.use(express.static(path.join(__dirname,'src', 'public')));
 const authRoutes = require('./src/routes/authRoutes');
 const pacienteRoutes = require('./src/routes/pacienteRoutes');
 const admisionRoutes = require('./src/routes/admisionRoutes');
+const apiRoutes = require('./src/routes/api');
 
 
 const authMiddleware = require('./src/middlewares/auth');
@@ -37,6 +38,7 @@ const authMiddleware = require('./src/middlewares/auth');
 app.use('/auth', authRoutes);
 app.use('/pacientes', authMiddleware, pacienteRoutes);
 app.use('/admisiones', authMiddleware, admisionRoutes);
+app.use('/api', apiRoutes);
 
 
 app.get('/', (req, res) => {

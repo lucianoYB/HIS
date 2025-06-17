@@ -15,6 +15,14 @@ const AsignacionCama = sequelize.define('AsignacionCama', {
     references: { model: 'admisiones', key: 'id' }, // minúsculas y plural
     onDelete: 'CASCADE'
   },
+  ala_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'alas',
+      key: 'id'
+    }
+  },
   fecha_asignacion: {
     type: DataTypes.DATE,
     allowNull: false,

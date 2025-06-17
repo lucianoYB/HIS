@@ -13,5 +13,23 @@ block content
     .mb-3
       label.form-label(for="apellido") Apellido
       input.form-control(type="text", name="apellido", id="apellido", required)
-    // Agrega más campos según tu modelo...
+    .mb-3
+      label.form-label(for="fecha_nacimiento") Fecha de nacimiento
+      input.form-control(type="date", name="fecha_nacimiento", id="fecha_nacimiento", required)
+    .mb-3
+      label.form-label(for="sexo") Sexo
+      select.form-control(name="sexo", id="sexo", required)
+        option(value="") Seleccione
+        option(value="M") Masculino
+        option(value="F") Femenino
+        option(value="O") Otro
+    .mb-3
+      label.form-label(for="direccion") Dirección
+      input.form-control(type="text", name="direccion", id="direccion", required)
+    .mb-3
+      label.form-label(for="telefono") Teléfono
+      input.form-control(type="text", name="telefono", id="telefono", required)
+    .mb-3
+      label.form-label(for="email") Email
+      input.form-control(type="email", name="email", id="email", required)
     button.btn.btn-primary(type="submit") Guardar

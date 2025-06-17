@@ -1,43 +1,19 @@
 extends ../layouts/main
 
 block content
-  h1.mb-4 Asignar cama a #{admision.Paciente.nombre} #{admision.Paciente.apellido}
+  h1= title
 
-  .card
-    .card-header
-      h5.card-title Información del Paciente
-    .card-body
-      p Nombre: #{admision.Paciente.nombre} #{admision.Paciente.apellido}
-      p DNI: #{admision.Paciente.dni}
-      p Sexo: #{admision.Paciente.sexo === 'M' ? 'Masculino' : admision.Paciente.sexo === 'F' ? 'Femenino' : 'Otro'}
-      p Motivo de admisión: #{admision.motivo}
-
-  .card.mt-4
-    .card-header
-      h5.card-title Seleccionar Cama
-    .card-body
-      form(method="POST", action=`/admisiones/${admision.id}/asignar-cama`)
-        .mb-3
-          label.form-label(for="ala") Ala/Habitación
-          select.form-select(name="ala", onchange="this.form.submit()")
-            option(value="") Todas
-            each ala in alas
-              option(
-                value=ala.id,
-                selected=(ala.id == selectedAla ? true : false)
-              )= `${ala.nombre} (${ala.especialidad})`
-
-        if camas && camas.length > 0
-          .mb-3
-            label.form-label(for="cama_id") Camas Disponibles
-            select.form-select(name="cama_id", required)
-              each cama in camas
-                option(value=cama.id)= `Cama ${cama.numero} - Habitación ${cama.Habitacion.numero} (${cama.Habitacion.Ala.nombre})`
-          
-          .mb-3
-            label.form-label(for="notas") Notas
-            textarea.form-control(name="notas", rows="3")
-          
-          button.btn.btn-primary(type="submit") Asignar Cama
-        else
-          .alert.alert-warning No hay camas disponibles en esta área
+  form(method="POST", action=`/admisiones/${admision.id}/asignar-cama`)
+    .mb-3
+      label.form-label(for="ala_id") Seleccione un ala
+      select.form-control(name="ala_id", id="ala_id", required)
+        option(value="") Seleccione un ala
+        each ala in alas
+          option(value=ala.id)= ala.nombre
+    .mb-3
+      label.form-label(for="cama_id") Seleccione una cama
+      select.form-control(name="cama_id", id="cama_id", required)
+        option(value="") Seleccione una cama
+        each cama in camas
+          option(value=cama.id selected=(camaSeleccionada && camaSeleccionada.id == cama.id)) Cama #{cama.numero} - Habitación #{cama.Habitacion.numero}
+    button.btn.btn-primary(type="submit") Asignar
